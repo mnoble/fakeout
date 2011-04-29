@@ -1,0 +1,65 @@
+h1. Fakeout
+
+Fakeout helps you test your command line libraries. It captures all output to @STDOUT@ and @STDERR@ during test execution so you can ensure your library is yelling the right things at the user.
+
+h2. Install
+
+    gem install fakeout
+
+h2. RSpec
+
+h3. Activate (before) and Deactivate (after) In All Specs
+
+bc.. require "fakeout/spec_helpers"
+
+RSpec.config do |c|
+  c.include Fakeout::SpecHelpers
+end
+
+h3. Only Certain Specs
+
+bc.. require "fakeout/spec_helpers"
+
+describe "Something" do
+  include Fakeout::SpecHelpers
+  ...
+end
+
+h3. Manually
+
+bc.. require "fakeout"
+
+describe "Something" do
+  before { Fakeout.activate! }
+  after  { Fakeout.deactivate! }
+end
+
+
+h2. Test::Unit
+
+bc.. # something_test.rb
+require "fakeout/test_helpers"
+
+class SomethingTest < Test::Unit::TestCase
+  include Fakeout::TestHelpers
+  
+  def setup
+    Fakeout.activate!
+  end
+  
+  def teardown
+    Fakeout.deactivate!
+  end
+end
+
+h2. Helpers
+
+Fakeout exposes two string-like objects:
+
+@stdout@ : Anything sent to @$stdout@.
+@stderr@ : Anything sent to @$stderr@.
+
+bc.. it "should write output" do
+  puts "ohai"
+  stdout.should include "ohai"
+end
