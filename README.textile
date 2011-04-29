@@ -22,18 +22,18 @@ bc.. require "fakeout/spec_helpers"
 
 describe "Something" do
   include Fakeout::SpecHelpers
-  ...
 end
 
-h3. Manually
+h3. Manually Activate and Deactivate
 
-bc.. require "fakeout"
+bc.. require "fakeout/spec_helpers"
 
 describe "Something" do
+  include Fakeout::SpecHelpers
+
   before { Fakeout.activate! }
   after  { Fakeout.deactivate! }
 end
-
 
 h2. Test::Unit
 
@@ -60,6 +60,6 @@ Fakeout exposes two string-like objects:
 @stderr@ : Anything sent to @$stderr@.
 
 bc.. it "should write output" do
-  puts "ohai"
+  thing.that_outputs_to_stdout
   stdout.should include "ohai"
 end
