@@ -1,2 +1,2 @@
-require "stringio"
-require "fakeout/base"
+require "fakeout/safe"
+Fakeout.activate!

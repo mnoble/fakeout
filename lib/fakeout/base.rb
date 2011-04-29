@@ -14,6 +14,6 @@ module Fakeout
   end
 
   def self.is_active?
-    @is_active
+    !!@is_active
   end
 end

@@ -1,5 +1,3 @@
-require "fakeout"
-
 module Fakeout
   module TestHelpers
     def stdout

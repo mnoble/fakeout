@@ -1,5 +1,3 @@
-require "fakeout/test_helpers"
-
 module Fakeout
   module SpecHelpers
     include TestHelpers

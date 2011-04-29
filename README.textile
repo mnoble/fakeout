@@ -1,46 +1,55 @@
 h1. Fakeout
 
-Fakeout helps you test your command line libraries. It captures all output to @STDOUT@ and @STDERR@ during test execution so you can ensure your library is yelling the right things at the user.
+Fakeout is an easy way of testing the output of your command line tools and libraries.
 
-h2. Install
+It catches all output to @$stdout@ and @$stderr@ while activated so you can test the correct output is given by your library or script. It also has the nice side-effect of keeping your test results from being crapped up with non test result text and data.
 
-    gem install fakeout
+h2. Usage
 
-h2. RSpec
+To load and activate Fakeout:
 
-h3. Activate (before) and Deactivate (after) In All Specs
-
-bc.. require "fakeout/spec_helpers"
-
-RSpec.config do |c|
-  c.include Fakeout::SpecHelpers
-end
-
-h3. Only Certain Specs
-
-bc.. require "fakeout/spec_helpers"
-
-describe "Something" do
-  include Fakeout::SpecHelpers
-end
+bc.. require "fakeout"
 
 h3. Manually Activate and Deactivate
 
-bc.. require "fakeout/spec_helpers"
+If you want to control when Fakeout starts and stops capturing output:
 
-describe "Something" do
-  include Fakeout::SpecHelpers
+bc.. require "fakeout/safe"
 
-  before { Fakeout.activate! }
-  after  { Fakeout.deactivate! }
+Fakeout.activate!
+# your code
+Fakeout.deactivate!
+
+p. Both of the approaches above work for RSpec, UnitTest, or whatever.
+
+h2. Helpers
+
+Including the @Fakeout::TestHelpers@ module into your spec or test class exposes two objects, @stdout@ and @stderr@, each containing any output sent, while Fakeout is activated, to @$stdout@ and @$stderr@, respectively.
+
+bc.. it "should rawr to $stdout" do
+  lion.rawr_to_stdout
+  stdout.should include "RAWR!!"
 end
+
+h2. RSpec
+
+@Fakeout::SpecHelpers@ will automatically activate before each example and deactivate after each one when included. It can be included into individual Example Groups:
+
+bc.. describe "Something" do
+  include Fakeout::SpecHelpers
+end
+
+p. or included into all Example Groups:
+
+bc.. RSpec.config do |c|
+  c.include Fakeout::SpecHelpers
+end
+
+p. * Note that if you use @SpecHelpers@ with RSpec, you DO NOT need to include @TestHelpers@.
 
 h2. Test::Unit
 
-bc.. # something_test.rb
-require "fakeout/test_helpers"
-
-class SomethingTest < Test::Unit::TestCase
+bc.. class SomethingTest < Test::Unit::TestCase
   include Fakeout::TestHelpers
   
   def setup
@@ -52,14 +61,17 @@ class SomethingTest < Test::Unit::TestCase
   end
 end
 
-h2. Helpers
+h2. Installation
 
-Fakeout exposes two string-like objects:
+bc.. $ gem install fakeout
 
-@stdout@ : Anything sent to @$stdout@.
-@stderr@ : Anything sent to @$stderr@.
+h2. Contribution
 
-bc.. it "should write output" do
-  thing.that_outputs_to_stdout
-  stdout.should include "ohai"
-end
+1. Fork Fakeout
+2. Create a topic branch - @git checkout -b branch_name@
+3. Push branch to your fork - @git push origin branch_name@
+4. Send a pull request
+
+h2. Thanks
+
+Defunkt for FakeFS, which much of Fakeout is modeled after.
